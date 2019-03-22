@@ -52,14 +52,14 @@ public class ServiceTest {
         Assert.assertEquals(listSize + 1, numberOfTeme(teme));
     }
 
-    @Test
-    public void addToTemaONota() {
-        Iterable<Nota> note = service.getAllNote();
-        int listSize = numberOfNote(note);
-        service.addNota(new Nota(String.valueOf(System.currentTimeMillis()), "100", ID, 10,
-                LocalDate.of(2019, 2,27)), "Well done");
-        Assert.assertEquals(listSize + 1, numberOfNote(note));
-    }
+//    @Test
+//    public void addToTemaONota() {
+//        Iterable<Nota> note = service.getAllNote();
+//        int listSize = numberOfNote(note);
+//        service.addNota(new Nota(String.valueOf(System.currentTimeMillis()), "100", ID, 10,
+//                LocalDate.of(2019, 2,27)), "Well done");
+//        Assert.assertEquals(listSize + 1, numberOfNote(note));
+//    }
 
     private int numberOfStudents(Iterable<Student> list) {
         int s = 0;
