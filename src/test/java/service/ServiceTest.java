@@ -1,11 +1,11 @@
 package service;
 
-import domain.Nota;
 import domain.Student;
 import domain.Tema;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.testng.asserts.SoftAssert;
 import repository.NotaXMLRepo;
 import repository.StudentXMLRepo;
 import repository.TemaXMLRepo;
@@ -13,13 +13,9 @@ import validation.NotaValidator;
 import validation.StudentValidator;
 import validation.TemaValidator;
 
-import java.time.LocalDate;
+import static DataVariables.Strings.*;
 
 public class ServiceTest {
-
-    private static final String filenameStudent = "fisiere//Studenti.xml";
-    private static final String filenameTema = "fisiere//Teme.xml";
-    private static final String filenameNota = "fisiere//Note.xml";
     private static Service service;
     private static String ID;
 
@@ -39,8 +35,7 @@ public class ServiceTest {
     public void addStudent() {
         Iterable<Student> students = service.getAllStudenti();
         int listSize = numberOfStudents(students);
-        System.out.println(listSize);
-        service.addStudent(new Student(String.valueOf(System.currentTimeMillis()), "Test", 935, "test@scs.ubbcluj.ro"));
+        service.addStudent(new Student(ID, TEST, GROUP, EMAIL));
         Assert.assertEquals(listSize + 1, numberOfStudents(students));
     }
 
@@ -48,17 +43,30 @@ public class ServiceTest {
     public void addTema() {
         Iterable<Tema> teme = service.getAllTeme();
         int listSize = numberOfTeme(teme);
-        service.addTema(new Tema(ID, "Test", 14, 2));
+        service.addTema(new Tema(ID, TEST, DEADLINE, RECEIVE));
         Assert.assertEquals(listSize + 1, numberOfTeme(teme));
     }
 
     @Test
-    public void addToTemaONota() {
-        Iterable<Nota> note = service.getAllNote();
-        int listSize = numberOfNote(note);
-        service.addNota(new Nota(String.valueOf(System.currentTimeMillis()), "100", ID, 10,
-                LocalDate.of(2019, 2,27)), "Well done");
-        Assert.assertEquals(listSize + 1, numberOfNote(note));
+    public void getStudentByID() {
+        Student student = service.findStudent(ID);
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(student.getID(), ID, "The ID does not match.");
+        softAssert.assertEquals(student.getNume(), TEST, "The ame does not match");
+        softAssert.assertEquals(student.getGrupa(), GROUP, "The group does not match.");
+        softAssert.assertEquals(student.getEmail(), EMAIL, "The email does not match.");
+        softAssert.assertAll();
+    }
+
+    @Test
+    public void getTemaByID() {
+        Tema tema = service.findTema(ID);
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(tema.getID(), ID, "The ID does not match.");
+        softAssert.assertEquals(tema.getDescriere(), TEST, "The ame does not match");
+        softAssert.assertEquals(tema.getDeadline(), DEADLINE, "The group does not match.");
+        softAssert.assertEquals(tema.getPrimire(), RECEIVE, "The email does not match.");
+        softAssert.assertAll();
     }
 
     private int numberOfStudents(Iterable<Student> list) {
@@ -70,16 +78,7 @@ public class ServiceTest {
 
     private int numberOfTeme(Iterable<Tema> list) {
         int s = 0;
-        for (Tema tema : list) {
-            s++;
-            System.out.println(tema);
-        }
-        return s;
-    }
-
-    private int numberOfNote(Iterable<Nota> list) {
-        int s = 0;
-        for (Nota nota : list)
+        for (Tema tema : list)
             s++;
         return s;
     }
