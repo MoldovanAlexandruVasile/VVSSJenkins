@@ -12,6 +12,7 @@ import repository.TemaXMLRepo;
 import validation.NotaValidator;
 import validation.StudentValidator;
 import validation.TemaValidator;
+import validation.ValidationException;
 
 import static DataVariables.Strings.*;
 
@@ -31,12 +32,29 @@ public class ServiceTest {
         ID = String.valueOf(System.currentTimeMillis());
     }
 
-    @Test
-    public void addStudent() {
-        Iterable<Student> students = service.getAllStudenti();
-        int listSize = numberOfStudents(students);
-        service.addStudent(new Student(ID, TEST, GROUP, EMAIL));
-        Assert.assertEquals(listSize + 1, numberOfStudents(students));
+    @Test(expected = ValidationException.class)
+    public void addStudentNullID() {
+        service.addStudent(new Student(null, TEST, GROUP, EMAIL));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addStudentEmptyID() {
+        service.addStudent(new Student("", TEST, GROUP, EMAIL));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addStudentInvalidName() {
+        service.addStudent(new Student(ID, TEST + "1234", GROUP, EMAIL));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addStudentInvalidGroup() {
+        service.addStudent(new Student(ID, TEST, -1, EMAIL));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addStudentInvalidEmailFormat() {
+        service.addStudent(new Student(ID, TEST, GROUP, EMAIL_INVALID_FORMAT));
     }
 
     @Test
@@ -45,6 +63,14 @@ public class ServiceTest {
         int listSize = numberOfTeme(teme);
         service.addTema(new Tema(ID, TEST, DEADLINE, RECEIVE));
         Assert.assertEquals(listSize + 1, numberOfTeme(teme));
+    }
+
+    @Test
+    public void addStudent() {
+        Iterable<Student> students = service.getAllStudenti();
+        int listSize = numberOfStudents(students);
+        service.addStudent(new Student(ID, TEST, GROUP, EMAIL));
+        Assert.assertEquals(listSize + 1, numberOfStudents(students));
     }
 
     @Test
