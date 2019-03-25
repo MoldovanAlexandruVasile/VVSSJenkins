@@ -43,6 +43,16 @@ public class ServiceTest {
     }
 
     @Test(expected = ValidationException.class)
+    public void addStudentNullName() {
+        service.addStudent(new Student(ID, null, GROUP, EMAIL));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addStudentEmptyName() {
+        service.addStudent(new Student(ID, "", GROUP, EMAIL));
+    }
+
+    @Test(expected = ValidationException.class)
     public void addStudentInvalidName() {
         service.addStudent(new Student(ID, TEST + "1234", GROUP, EMAIL));
     }
@@ -53,16 +63,18 @@ public class ServiceTest {
     }
 
     @Test(expected = ValidationException.class)
-    public void addStudentInvalidEmailFormat() {
-        service.addStudent(new Student(ID, TEST, GROUP, EMAIL_INVALID_FORMAT));
+    public void addStudentNullEmail() {
+        service.addStudent(new Student(ID, TEST, GROUP, null));
     }
 
-    @Test
-    public void addTema() {
-        Iterable<Tema> teme = service.getAllTeme();
-        int listSize = numberOfTeme(teme);
-        service.addTema(new Tema(ID, TEST, DEADLINE, RECEIVE));
-        Assert.assertEquals(listSize + 1, numberOfTeme(teme));
+    @Test(expected = ValidationException.class)
+    public void addStudentEmptyEmail() {
+        service.addStudent(new Student(ID, TEST, GROUP, ""));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addStudentInvalidEmailFormat() {
+        service.addStudent(new Student(ID, TEST, GROUP, EMAIL_INVALID_FORMAT));
     }
 
     @Test
@@ -82,6 +94,54 @@ public class ServiceTest {
         softAssert.assertEquals(student.getGrupa(), GROUP, "The group does not match.");
         softAssert.assertEquals(student.getEmail(), EMAIL, "The email does not match.");
         softAssert.assertAll();
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addTemaWithNullID() {
+        service.addTema(new Tema(null, TEST, DEADLINE, RECEIVE));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addTemaWithEmptyID() {
+        service.addTema(new Tema("", TEST, DEADLINE, RECEIVE));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addTemaWithEmptyDescription() {
+        service.addTema(new Tema(ID, "", DEADLINE, RECEIVE));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addTemaWithNullDescription() {
+        service.addTema(new Tema(ID, null, DEADLINE, RECEIVE));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addTemaWithInvalidDeadlineLow() {
+        service.addTema(new Tema(ID, TEST, 0, RECEIVE));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addTemaWithInvalidDeadlineUpp() {
+        service.addTema(new Tema(ID, TEST, 15, RECEIVE));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addTemaWithInvalidReceiveLow() {
+        service.addTema(new Tema(ID, TEST, DEADLINE, 0));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addTemaWithInvalidReceiveUpp() {
+        service.addTema(new Tema(ID, TEST, DEADLINE, 15));
+    }
+
+    @Test
+    public void addTema() {
+        Iterable<Tema> teme = service.getAllTeme();
+        int listSize = numberOfTeme(teme);
+        service.addTema(new Tema(ID, TEST, DEADLINE, RECEIVE));
+        Assert.assertEquals(listSize + 1, numberOfTeme(teme));
     }
 
     @Test
