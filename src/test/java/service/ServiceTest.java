@@ -140,19 +140,24 @@ public class ServiceTest {
     public void addTema() {
         Iterable<Tema> teme = service.getAllTeme();
         int listSize = numberOfTeme(teme);
-        service.addTema(new Tema(ID, TEST, DEADLINE, RECEIVE));
-        Assert.assertEquals(listSize + 1, numberOfTeme(teme));
+        Tema tema = service.addTema(new Tema(ID, TEST, DEADLINE, RECEIVE));
+        if (tema == null)
+            Assert.assertEquals(listSize + 1, numberOfTeme(teme));
+        else Assert.assertEquals(listSize, numberOfTeme(teme));
     }
 
     @Test
     public void getTemaByID() {
-        Tema tema = service.findTema(ID);
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(tema.getID(), ID, "The ID does not match.");
-        softAssert.assertEquals(tema.getDescriere(), TEST, "The ame does not match");
-        softAssert.assertEquals(tema.getDeadline(), DEADLINE, "The group does not match.");
-        softAssert.assertEquals(tema.getPrimire(), RECEIVE, "The email does not match.");
-        softAssert.assertAll();
+        Tema tema = service.findTema("1111111111");
+        if (tema != null) {
+            SoftAssert softAssert = new SoftAssert();
+            softAssert.assertEquals(tema.getID(), ID, "The ID does not match.");
+            softAssert.assertEquals(tema.getDescriere(), TEST, "The name does not match");
+            softAssert.assertEquals(tema.getDeadline(), DEADLINE, "The group does not match.");
+            softAssert.assertEquals(tema.getPrimire(), RECEIVE, "The email does not match.");
+            softAssert.assertAll();
+        } else
+            Assert.assertNull(tema);
     }
 
     private int numberOfStudents(Iterable<Student> list) {
