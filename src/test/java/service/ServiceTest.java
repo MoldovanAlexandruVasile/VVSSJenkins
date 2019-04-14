@@ -144,40 +144,41 @@ public class ServiceTest {
         int listSize = numberOfTeme(teme);
         Tema tema1 = new Tema(ID, TEST, DEADLINE, RECEIVE);
         Tema tema2 = new Tema(ID_EXISTING_HOMEWORK, TEST, DEADLINE, RECEIVE);
-        System.out.println(tema1);
-        System.out.println(tema2);
+        Tema tema;
         int decision = new Random().nextInt(2);
-        if (decision == 0) {
-            service.addTema(tema1);
+        if (decision == 0)
+            tema = service.addTema(tema1);
+        else
+            tema = service.addTema(tema2);
+        if (tema == null)
             Assert.assertEquals(listSize + 1, numberOfTeme(teme));
-        } else {
-            service.addTema(tema2);
+        else
             Assert.assertEquals(listSize, numberOfTeme(teme));
-        }
     }
 
     @Test
     public void getTemaByID() {
+        Tema tema;
         int decision = new Random().nextInt(2);
-        if (decision == 0) {
-            service.addTema(new Tema(ID, TEST, DEADLINE, RECEIVE));
-            Tema tema = service.findTema(ID);
+        if (decision == 0)
+            tema = service.findTema(ID);
+        else
+            tema = service.findTema(ID_EXISTING_HOMEWORK);
+        if (tema != null) {
+            System.out.println(tema);
             SoftAssert softAssert = new SoftAssert();
-            softAssert.assertEquals(tema.getID(), ID, "The ID does not match.");
-            softAssert.assertEquals(tema.getDescriere(), TEST, "The name does not match");
-            softAssert.assertEquals(tema.getDeadline(), DEADLINE, "The group does not match.");
-            softAssert.assertEquals(tema.getPrimire(), RECEIVE, "The email does not match.");
+            softAssert.assertEquals(tema.getID(), ID_EXISTING_HOMEWORK, "The ID does not match.");
+            softAssert.assertEquals(tema.getDescriere(), "file repository", "The name does not match");
+            softAssert.assertEquals(tema.getDeadline(), 2, "The group does not match.");
+            softAssert.assertEquals(tema.getPrimire(), 1, "The email does not match.");
             softAssert.assertAll();
-        } else {
-            Tema invalidTema = service.findTema(String.valueOf(System.currentTimeMillis()));
-            Assert.assertNull(invalidTema);
-        }
+        } else
+            Assert.assertNull(tema);
     }
-
 
     private int numberOfStudents(Iterable<Student> list) {
         int s = 0;
-        for (Student ignored : list)
+        for (Student student : list)
             s++;
         return s;
     }
