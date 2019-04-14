@@ -14,6 +14,8 @@ import validation.StudentValidator;
 import validation.TemaValidator;
 import validation.ValidationException;
 
+import java.util.Random;
+
 import static DataVariables.Strings.*;
 
 public class ServiceTest {
@@ -140,29 +142,42 @@ public class ServiceTest {
     public void addTema() {
         Iterable<Tema> teme = service.getAllTeme();
         int listSize = numberOfTeme(teme);
-        Tema tema = service.addTema(new Tema(ID, TEST, DEADLINE, RECEIVE));
-        if (tema == null)
+        Tema tema1 = new Tema(ID, TEST, DEADLINE, RECEIVE);
+        Tema tema2 = new Tema(ID_EXISTING_HOMEWORK, TEST, DEADLINE, RECEIVE);
+        System.out.println(tema1);
+        System.out.println(tema2);
+        int decision = new Random().nextInt(2);
+        if (decision == 0) {
+            service.addTema(tema1);
             Assert.assertEquals(listSize + 1, numberOfTeme(teme));
-        else Assert.assertEquals(listSize, numberOfTeme(teme));
+        } else {
+            service.addTema(tema2);
+            Assert.assertEquals(listSize, numberOfTeme(teme));
+        }
     }
 
     @Test
     public void getTemaByID() {
-        Tema tema = service.findTema("1111111111");
-        if (tema != null) {
+        int decision = new Random().nextInt(2);
+        if (decision == 0) {
+            service.addTema(new Tema(ID, TEST, DEADLINE, RECEIVE));
+            Tema tema = service.findTema(ID);
             SoftAssert softAssert = new SoftAssert();
             softAssert.assertEquals(tema.getID(), ID, "The ID does not match.");
             softAssert.assertEquals(tema.getDescriere(), TEST, "The name does not match");
             softAssert.assertEquals(tema.getDeadline(), DEADLINE, "The group does not match.");
             softAssert.assertEquals(tema.getPrimire(), RECEIVE, "The email does not match.");
             softAssert.assertAll();
-        } else
-            Assert.assertNull(tema);
+        } else {
+            Tema invalidTema = service.findTema(String.valueOf(System.currentTimeMillis()));
+            Assert.assertNull(invalidTema);
+        }
     }
+
 
     private int numberOfStudents(Iterable<Student> list) {
         int s = 0;
-        for (Student student : list)
+        for (Student ignored : list)
             s++;
         return s;
     }

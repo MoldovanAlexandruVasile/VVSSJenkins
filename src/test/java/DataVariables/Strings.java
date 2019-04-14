@@ -10,4 +10,5 @@ public class Strings {
     public static final int GROUP = 935;
     public static final int DEADLINE = 14;
     public static final int RECEIVE = 2;
+    public static final String ID_EXISTING_HOMEWORK = "1";
 }
