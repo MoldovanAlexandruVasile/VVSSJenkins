@@ -69,9 +69,11 @@ public class BigBangTest {
         service.addNota(nota, "Bine");
     }
 
-    @Test
+    @Test(expected = ValidationException.class)
     public void bigBangTest() {
-        
+        addStudent();
+        addTema();
+        addGrade();
     }
 
     private int numberOfStudents(Iterable<Student> list) {
